@@ -41,8 +41,8 @@ set $fm pcmanfm
 
 #For my old netbook/Для нетбука
 
-output LVDS-1 mode 1024x600@Hz dpms on
-output * bg /home/owl/img/wall/sve.png fill
+#output LVDS-1 mode 1024x600@Hz dpms on
+#output * bg /home/owl/img/wall/sve.png fill
 #output DP-1 position 1920 0
 
 #Languages/Клава и языки
@@ -132,15 +132,21 @@ bar
 { 
 	status_command swaybar -m
 	position top
-	height 40
-	font pango:monospace 20
+	height 30
+	font pango:monospace 15
 	workspace_buttons yes
 	tray_output primary
 	colors
 	{
 		statusline #689d6a
 		background #282828
-		inactive_workspace #282828 #689d6a
+		inactive_workspace #282828 #282828 #689d6a
+		active_workspace #282828 #689d6a #282828
+		urgent_workspace #282828 #689d6a #282828
+		focused_workspace #282828 #689d6a #282828
+	}
+	status_command while ~/.config/sway/mthrbar.sh; do sleep 1; done
+}
 exec swaync
 
 include /etc/sway/config.d/*
