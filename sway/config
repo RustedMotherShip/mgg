@@ -1,0 +1,132 @@
+#  __  __________   ____  
+# |  \/   _   _  | |  _ \ 
+# | |\/| | | | | |_| |_) |
+# | |  | | | | |  _   _ < 
+# |_|  |_| |_| |_| |_| \_\
+#                      Inc. 
+
+# Цвета
+client.focused #282828 #689d6a #282828 #689d6a
+client.unfocused #689d6a #282828 #689d6a #689d6a
+client.urgent #cc241d #fb4934 #fb4934 #cc241d
+
+# Гапсы
+for_window [class="^.*"] border pixel 2, title_format "%title"
+gaps inner 10
+gaps outer 10
+smart_gaps on
+font pango:monospace 14
+
+# Дефолты
+set $mod Mod4
+set $left Left
+set $down Down
+set $up Up
+set $right Right
+set $term foot
+set $menu rofi -show drun
+set $fm pcmanfm
+
+# Мониторы
+
+# Настройки мониторов
+#focus output HDMI-A-2
+#workspace owo output HDMI-A-2
+#workspace dvp output HDMI-A-2
+#workspace vrt output HDMI-A-2
+
+#focus output DP-1
+#workspace web output DP-1
+#workspace doc output DP-1
+
+output LVDS-1 mode 1024x600@Hz dpms on
+output * bg /home/owl/img/wall/sve.png fill
+#output DP-1 position 1920 0
+
+#Клава и языки
+input * {
+    xkb_layout us,ru
+    xkb_options grp:win_space_toggle
+}
+
+#Автолок экрана
+	exec swayidle -w timeout 400 'swaylock -f -c 000000'
+#Лок экрана
+	bindsym $mod+l exec swaylock -f -c 000000
+
+
+# Бинды кнопок
+
+    # Терминал
+    bindsym $mod+t exec $term
+	# Файловый менеджер
+    bindsym $mod+y exec $fm
+    # Лаунчер
+    bindsym $mod+d exec $menu
+	#Скриншот
+    bindsym $mod+Print exec grim -g "$(slurp)" - | wl-copy
+    
+
+# Настройки
+
+	# Режим окон
+    floating_modifier $mod normal
+
+    # Релоад конфига
+    bindsym $mod+Shift+c reload
+
+    # Выйти
+    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+# Перемещение
+
+    # Движение по окон
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    bindsym $mod+$right focus right
+
+    # Перемещение окон по воркспейсу
+    bindsym $mod+Shift+$left move left
+    bindsym $mod+Shift+$down move down
+    bindsym $mod+Shift+$up move up
+    bindsym $mod+Shift+$right move right
+
+# Воркспейс
+
+    # Переключение на воркспейс
+    bindsym $mod+1 workspace web
+    bindsym $mod+2 workspace dvp
+    bindsym $mod+3 workspace trm
+    # Перемещения окон на воркспейсы
+    bindsym $mod+Shift+1 move container to workspace web
+    bindsym $mod+Shift+2 move container to workspace dvp
+    bindsym $mod+Shift+3 move container to workspace trm
+
+
+# Окна
+    bindsym $mod+z kill
+    #убить окно
+
+    bindsym $mod+x floating toggle
+    #постоянный флоат мод
+
+    bindsym $mod+c fullscreen
+	#фулскрин
+	
+#ресайз окон с клавы
+	bindsym $mod+r mode "resize"
+	mode "resize" {
+	    bindsym $left resize shrink width 10px
+	    bindsym $down resize grow height 10px
+	    bindsym $up resize shrink height 10px
+	    bindsym $right resize grow width 10px
+		#выйти с ресайз мода
+	    bindsym Return mode "default"
+	    bindsym Escape mode "default"
+	}
+
+exec waybar
+exec dunst
+
+include /etc/sway/config.d/*
