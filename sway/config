@@ -5,19 +5,19 @@
 # |_|  |_| |_| |_| |_| \_\
 #                      Inc. 
 
-# Цвета
+# Colors/Цвета
 client.focused #282828 #689d6a #282828 #689d6a
 client.unfocused #689d6a #282828 #689d6a #689d6a
 client.urgent #cc241d #fb4934 #fb4934 #cc241d
 
-# Гапсы
+# Gaps/Гапсы
 for_window [class="^.*"] border pixel 2, title_format "%title"
 gaps inner 10
 gaps outer 10
 smart_gaps on
 font pango:monospace 14
 
-# Дефолты
+# Defaults/Дефолты
 set $mod Mod4
 set $left Left
 set $down Down
@@ -27,9 +27,9 @@ set $term foot
 set $menu rofi -show drun
 set $fm pcmanfm
 
-# Мониторы
+# Displays/Мониторы
 
-# Настройки мониторов
+# Settings of monitors/Настройки мониторов
 #focus output HDMI-A-2
 #workspace owo output HDMI-A-2
 #workspace dvp output HDMI-A-2
@@ -39,23 +39,25 @@ set $fm pcmanfm
 #workspace web output DP-1
 #workspace doc output DP-1
 
+#For my old netbook/Для нетбука
+
 output LVDS-1 mode 1024x600@Hz dpms on
 output * bg /home/owl/img/wall/sve.png fill
 #output DP-1 position 1920 0
 
-#Клава и языки
+#Languages/Клава и языки
 input * {
     xkb_layout us,ru
     xkb_options grp:win_space_toggle
 }
 
-#Автолок экрана
+#Autolock/Автолок экрана
 	exec swayidle -w timeout 400 'swaylock -f -c 000000'
-#Лок экрана
+#Lock/Лок экрана
 	bindsym $mod+l exec swaylock -f -c 000000
 
 
-# Бинды кнопок
+# Binds/Бинды кнопок
 
     # Терминал
     bindsym $mod+t exec $term
@@ -67,7 +69,7 @@ input * {
     bindsym $mod+Print exec grim -g "$(slurp)" - | wl-copy
     
 
-# Настройки
+# Settings/Настройки
 
 	# Режим окон
     floating_modifier $mod normal
@@ -78,7 +80,7 @@ input * {
     # Выйти
     bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
 
-# Перемещение
+# Moving/Перемещение
 
     # Движение по окон
     bindsym $mod+$left focus left
@@ -92,7 +94,7 @@ input * {
     bindsym $mod+Shift+$up move up
     bindsym $mod+Shift+$right move right
 
-# Воркспейс
+# Workspaces/Воркспейс
 
     # Переключение на воркспейс
     bindsym $mod+1 workspace web
@@ -104,7 +106,7 @@ input * {
     bindsym $mod+Shift+3 move container to workspace trm
 
 
-# Окна
+# Windows/Окна
     bindsym $mod+z kill
     #убить окно
 
@@ -114,7 +116,7 @@ input * {
     bindsym $mod+c fullscreen
 	#фулскрин
 	
-#ресайз окон с клавы
+#/Resizing/ресайз окон с клавы
 	bindsym $mod+r mode "resize"
 	mode "resize" {
 	    bindsym $left resize shrink width 10px
@@ -125,8 +127,20 @@ input * {
 	    bindsym Return mode "default"
 	    bindsym Escape mode "default"
 	}
-
-exec waybar
-exec dunst
+#Bar/Бар
+bar
+{ 
+	status_command swaybar -m
+	position top
+	height 40
+	font pango:monospace 20
+	workspace_buttons yes
+	tray_output primary
+	colors
+	{
+		statusline #689d6a
+		background #282828
+		inactive_workspace #282828 #689d6a
+exec swaync
 
 include /etc/sway/config.d/*
