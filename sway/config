@@ -5,6 +5,10 @@
 # |_|  |_| |_| |_| |_| \_\
 #                      Inc. 
 
+#Alpine
+exec dbus-update-activation-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+exec dbus-update-activation-environment DISPLAY
+
 # Colors/Цвета
 client.focused #282828 #689d6a #282828 #689d6a
 client.unfocused #689d6a #282828 #689d6a #689d6a
@@ -24,26 +28,29 @@ set $down Down
 set $up Up
 set $right Right
 set $term foot
-set $menu rofi -show drun
-set $fm pcmanfm
+set $menu foot sway-launcher-desktop
+set $fm foot mc
 
 # Displays/Мониторы
 
 # Settings of monitors/Настройки мониторов
-#focus output HDMI-A-2
-#workspace owo output HDMI-A-2
-#workspace dvp output HDMI-A-2
-#workspace vrt output HDMI-A-2
+focus output HDMI-A-2 mode 1920x1080@Hz
+workspace [ owo ] output HDMI-A-2
+workspace [ dvp ] output HDMI-A-2
+workspace [ vrt ] output HDMI-A-2
+output HDMI-A-2 position 0 0
 
-#focus output DP-1
-#workspace web output DP-1
-#workspace doc output DP-1
+focus output DP-1 mode 1280x1024@Hz
+workspace [ web ] output DP-1
+workspace [ stf ] output DP-1
+output DP-1 position 1920 0
 
+output * bg ./sway.jpg fill
 #For my old netbook/Для нетбука
 
 #output LVDS-1 mode 1024x600@Hz dpms on
-#output * bg /home/owl/img/wall/sve.png fill
-#output DP-1 position 1920 0
+
+
 
 #Languages/Клава и языки
 input * {
@@ -52,26 +59,43 @@ input * {
 }
 
 #Autolock/Автолок экрана
-	exec swayidle -w timeout 400 'swaylock -f -c 000000'
+    exec swayidle -w timeout 400 'swaylock -f -c 000000'
 #Lock/Лок экрана
-	bindsym $mod+l exec swaylock -f -c 000000
+    bindcode $mod+46 exec swaylock -f -c 000000
+
+#Suspend/Сон
+    bindcode $mod+Shift+46 exec loginctl suspend && swaylock -f -c 000000
 
 
 # Binds/Бинды кнопок
 
     # Терминал
-    bindsym $mod+t exec $term
-	# Файловый менеджер
-    bindsym $mod+y exec $fm
-    # Лаунчер
-    bindsym $mod+d exec $menu
-	#Скриншот
-    bindsym $mod+Print exec grim -g "$(slurp)" - | wl-copy
+    bindsym $mod+Return exec $term
+    bindcode $mod+28 exec $term
     
+    # Файловый менеджер
+    bindcode $mod+34 exec $fm
+    bindcode $mod+61 exec $fm
+    
+    # Лаунчер
+    bindcode $mod+40 exec $menu
+    
+    #Скриншот
+    bindsym $mod+Print exec grim -g "$(slurp)" - | wl-copy
+
+    # Звук
+    bindsym XF86AudioLowerVolume exec pamixer -d 5
+    bindsym XF86AudioRaiseVolume exec pamixer -i 5
+    bindsym XF86AudioMute exec pamixer -t
+
+    # Музыка
+    bindsym XF86AudioPlay exec playerctl 'play-pause'
+    bindsym XF86AudioNext exec playerctl next
+    bindsym XF86AudioPrev exec playerctl previous 
 
 # Settings/Настройки
 
-	# Режим окон
+    # Режим окон
     floating_modifier $mod normal
 
     # Релоад конфига
@@ -97,55 +121,80 @@ input * {
 # Workspaces/Воркспейс
 
     # Переключение на воркспейс
-    bindsym $mod+1 workspace web
-    bindsym $mod+2 workspace dvp
-    bindsym $mod+3 workspace trm
+    bindsym $mod+1 workspace [ owo ]
+    bindsym $mod+2 workspace [ dvp ]
+    bindsym $mod+3 workspace [ vrt ]
+    bindsym $mod+4 workspace [ web ]
+    bindsym $mod+5 workspace [ stf ]
     # Перемещения окон на воркспейсы
-    bindsym $mod+Shift+1 move container to workspace web
-    bindsym $mod+Shift+2 move container to workspace dvp
-    bindsym $mod+Shift+3 move container to workspace trm
+    bindsym $mod+Shift+1 move container to workspace [ owo ] 
+    bindsym $mod+Shift+2 move container to workspace [ dvp ] 
+    bindsym $mod+Shift+3 move container to workspace [ vrt ]
+    bindsym $mod+Shift+4 move container to workspace [ web ]
+    bindsym $mod+Shift+5 move container to workspace [ stf ] 
 
 
 # Windows/Окна
-    bindsym $mod+z kill
+    bindcode $mod+52 kill
     #убить окно
 
-    bindsym $mod+x floating toggle
+    bindcode $mod+53 floating toggle
     #постоянный флоат мод
 
-    bindsym $mod+c fullscreen
-	#фулскрин
-	
+    bindcode $mod+54 fullscreen
+    #фулскрин
+    
 #/Resizing/ресайз окон с клавы
-	bindsym $mod+r mode "resize"
-	mode "resize" {
-	    bindsym $left resize shrink width 10px
-	    bindsym $down resize grow height 10px
-	    bindsym $up resize shrink height 10px
-	    bindsym $right resize grow width 10px
-		#выйти с ресайз мода
-	    bindsym Return mode "default"
-	    bindsym Escape mode "default"
-	}
+    bindcode $mod+27 mode "resize"
+    mode "resize" {
+        bindsym $left resize shrink width 10px
+        bindsym $down resize grow height 10px
+        bindsym $up resize shrink height 10px
+        bindsym $right resize grow width 10px
+        #выйти с ресайз мода
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+    }
 #Bar/Бар
 bar
 { 
-	status_command swaybar -m
-	position top
-	height 30
-	font pango:monospace 15
-	workspace_buttons yes
-	tray_output primary
-	colors
-	{
-		statusline #689d6a
-		background #282828
-		inactive_workspace #282828 #282828 #689d6a
-		active_workspace #282828 #689d6a #282828
-		urgent_workspace #282828 #689d6a #282828
-		focused_workspace #282828 #689d6a #282828
-	}
-	status_command while ~/.config/sway/mthrbar.sh; do sleep 1; done
+    output HDMI-A-2
+    status_command swaybar 
+    position top
+    height 45
+    font pango:monospace 17
+    workspace_buttons yes
+    tray_output primary
+    colors
+    {
+        statusline #689d6a
+        background #282828
+        inactive_workspace #282828 #282828 #689d6a
+        active_workspace #282828 #282828 #689d6a
+        urgent_workspace #282828 #282828 #689d6a
+        focused_workspace #282828 #282828 #689d6a
+    }
+    status_command while ~/.config/sway/bar.sh; do sleep 1; done
+}
+bar
+{ 
+    output DP-1
+    status_command swaybar 
+    position top
+    height 45
+    font pango:monospace 17
+    workspace_buttons yes
+    tray_output primary
+    colors
+    {
+        statusline #689d6a
+        background #282828
+        inactive_workspace #282828 #282828 #689d6a
+        active_workspace #282828 #282828 #689d6a
+        urgent_workspace #282828 #282828 #689d6a
+        focused_workspace #282828 #282828 #689d6a
+    }
+    status_command while ~/.config/sway/bar.sh --mini; do sleep 1; done
 }
 exec swaync
 
