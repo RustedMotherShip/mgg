@@ -13,6 +13,7 @@ exec dbus-update-activation-environment DISPLAY
 client.focused #282828 #689d6a #282828 #689d6a
 client.unfocused #689d6a #282828 #689d6a #689d6a
 client.urgent #cc241d #fb4934 #fb4934 #cc241d
+client.focused_inactive #282828 #282828 #282828 #282828
 
 # Gaps/Гапсы
 for_window [class="^.*"] border pixel 2, title_format "%title"
@@ -49,8 +50,6 @@ output * bg ./sway.jpg fill
 #For my old netbook/Для нетбука
 
 #output LVDS-1 mode 1024x600@Hz dpms on
-
-
 
 #Languages/Клава и языки
 input * {
@@ -144,7 +143,7 @@ input * {
     bindcode $mod+54 fullscreen
     #фулскрин
     
-#/Resizing/ресайз окон с клавы
+#Resizing/ресайз окон с клавы
     bindcode $mod+27 mode "resize"
     mode "resize" {
         bindsym $left resize shrink width 10px
@@ -155,15 +154,14 @@ input * {
         bindsym Return mode "default"
         bindsym Escape mode "default"
     }
+
 #Bar/Бар
 bar
 { 
     output HDMI-A-2
-    status_command swaybar 
     position top
     height 45
-    font pango:monospace 17
-    workspace_buttons yes
+    font pango:DejaVu Sans Mono Bold 17
     tray_output primary
     colors
     {
@@ -171,19 +169,18 @@ bar
         background #282828
         inactive_workspace #282828 #282828 #689d6a
         active_workspace #282828 #282828 #689d6a
-        urgent_workspace #282828 #282828 #689d6a
-        focused_workspace #282828 #282828 #689d6a
+        urgent_workspace #282828 #282828 #cc241d
+        focused_workspace #282828 #282828 #d79921
     }
     status_command while ~/.config/sway/bar.sh; do sleep 1; done
 }
 bar
 { 
     output DP-1
-    status_command swaybar 
+    output HDMI-A-2
     position top
     height 45
-    font pango:monospace 17
-    workspace_buttons yes
+    font pango:DejaVu Sans Mono Bold 17
     tray_output primary
     colors
     {
@@ -191,8 +188,8 @@ bar
         background #282828
         inactive_workspace #282828 #282828 #689d6a
         active_workspace #282828 #282828 #689d6a
-        urgent_workspace #282828 #282828 #689d6a
-        focused_workspace #282828 #282828 #689d6a
+        urgent_workspace #282828 #282828 #cc241d
+        focused_workspace #282828 #282828 #d79921
     }
     status_command while ~/.config/sway/bar.sh --mini; do sleep 1; done
 }
