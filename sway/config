@@ -177,7 +177,6 @@ bar
 bar
 { 
     output DP-1
-    output HDMI-A-2
     position top
     height 45
     font pango:DejaVu Sans Mono Bold 17
