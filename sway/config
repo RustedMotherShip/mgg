@@ -5,9 +5,12 @@
 # |_|  |_| |_| |_| |_| \_\
 #                      Inc. 
 
-#Alpine
+#DBUS
 exec dbus-update-activation-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 exec dbus-update-activation-environment DISPLAY
+
+#Polkit
+exec --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
 
 # Colors/Цвета
 client.focused #282828 #689d6a #282828 #689d6a

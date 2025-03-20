@@ -12,6 +12,8 @@ hostname=$(hostnamectl hostname)
 
 hostname_alpine=$(hostname)
 
+disk=$(df -h / | awk '$NF ~ /^\// {print " " $4}')
+
 datetime=$(date +" %Y %b %d ][ %H:%M:%S")
 
 volume=$(pamixer --get-volume-human | awk '{print " " $0}')
