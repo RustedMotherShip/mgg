@@ -1,0 +1,215 @@
+#  __  __________   ____  
+# |  \/   _   _  | |  _ \ 
+# | |\/| | | | | |_| |_) |
+# | |  | | | | |  _   _ < 
+# |_|  |_| |_| |_| |_| \_\
+#                      Inc. 
+
+#DBUS
+exec dbus-update-activation-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+exec dbus-update-activation-environment DISPLAY
+
+#Polkit
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 
+
+# Colors/Цвета
+client.focused #282828 #689d6a #282828 #689d6a
+client.unfocused #689d6a #282828 #689d6a #689d6a
+client.urgent #cc241d #fb4934 #fb4934 #cc241d
+client.focused_inactive #282828 #282828 #282828 #282828
+
+#Wallpaper/Обои
+output * bg ./mgg_wall.png fill
+
+# Gaps/Гапсы
+for_window [class="^.*"] border pixel 2, title_format "%title"
+gaps inner 10
+gaps outer 10
+smart_gaps on
+font pango:monospace 14
+
+# Defaults/Дефолты
+set $mod Mod4
+set $left Left
+set $down Down
+set $up Up
+set $right Right
+set $term foot
+set $menu foot sway-launcher-desktop
+set $fm foot mc
+set $lock ~/.config/sway/lock.sh
+set $suspend systemctl suspend && ~/.config/sway/lock.sh
+
+# Displays/Мониторы
+
+# Settings of monitors/Настройки мониторов
+focus output HDMI-A-2 mode 1920x1080@Hz
+output HDMI-A-2 position 0 0
+
+focus output DP-1 mode 1280x1024@Hz
+output DP-1 position 1920 0
+
+#For my old netbook/Для нетбука
+
+#output LVDS-1 mode 1024x600@Hz dpms on
+
+#Languages/Клава и языки
+input * {
+    xkb_layout us,ru
+    xkb_options grp:win_space_toggle
+}
+
+#Lock/Лок экрана
+    bindcode $mod+46 exec $lock
+
+#Suspend/Сон
+    bindcode $mod+Shift+46 exec $suspend
+
+#Autolock/Автолок экрана
+    exec swayidle -w \
+    timeout 300  '$lock' \
+    timeout 301  'swaymsg "output * dpms off" && $suspend'\
+    resume   'swaymsg "output * dpms on"' \
+    after-resume 'clamshell' \
+    before-sleep 'playerctl pause' \
+    before-sleep '$lock'
+
+
+# Binds/Бинды кнопок
+
+    # Терминал
+    bindsym $mod+Return exec $term
+    bindcode $mod+28 exec $term
+    
+    # Файловый менеджер
+    bindcode $mod+34 exec $fm
+    bindcode $mod+61 exec $fm
+    
+    # Лаунчер
+    bindcode $mod+40 exec $menu
+    
+    #Скриншот
+    bindsym $mod+Print exec grim -g "$(slurp)" - | wl-copy
+
+    # Звук
+    bindsym XF86AudioLowerVolume exec pamixer -d 5
+    bindsym XF86AudioRaiseVolume exec pamixer -i 5
+    bindsym XF86AudioMute exec pamixer -t
+
+    # Музыка
+    bindsym XF86AudioPlay exec playerctl 'play-pause'
+    bindsym XF86AudioNext exec playerctl next
+    bindsym XF86AudioPrev exec playerctl previous 
+
+    # Яркость
+    bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+    bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
+
+# Settings/Настройки
+
+    # Режим окон
+    floating_modifier $mod normal
+
+    # Релоад конфига
+    bindsym $mod+Shift+c reload
+
+    # Выйти
+    bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit MGG?' -B 'Y' 'swaymsg exit'
+
+# Moving/Перемещение
+
+    # Движение по окон
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    bindsym $mod+$right focus right
+
+    # Перемещение окон по воркспейсу
+    bindsym $mod+Shift+$left move left
+    bindsym $mod+Shift+$down move down
+    bindsym $mod+Shift+$up move up
+    bindsym $mod+Shift+$right move right
+
+# Workspaces/Воркспейс
+
+    # Переключение на воркспейс
+    bindsym $mod+1 workspace [ owo ]
+    bindsym $mod+2 workspace [ dvp ]
+    bindsym $mod+3 workspace [ vrt ]
+    bindsym $mod+4 workspace [ web ]
+    bindsym $mod+5 workspace [ stf ]
+    # Перемещения окон на воркспейсы
+    bindsym $mod+Shift+1 move container to workspace [ owo ] 
+    bindsym $mod+Shift+2 move container to workspace [ dvp ] 
+    bindsym $mod+Shift+3 move container to workspace [ vrt ]
+    bindsym $mod+Shift+4 move container to workspace [ web ]
+    bindsym $mod+Shift+5 move container to workspace [ stf ] 
+
+    workspace [ owo ] output HDMI-A-2
+    workspace [ dvp ] output HDMI-A-2
+    workspace [ vrt ] output HDMI-A-2
+    workspace [ web ] output DP-1
+    workspace [ stf ] output DP-1
+
+# Windows/Окна
+    bindcode $mod+52 kill
+    #убить окно
+
+    bindcode $mod+53 floating toggle
+    #постоянный флоат мод
+
+    bindcode $mod+54 fullscreen
+    #фулскрин
+    
+#Resizing/ресайз окон с клавы
+    bindcode $mod+27 mode "resize"
+    mode "resize" {
+        bindsym $left resize shrink width 10px
+        bindsym $down resize grow height 10px
+        bindsym $up resize shrink height 10px
+        bindsym $right resize grow width 10px
+        #выйти с ресайз мода
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+    }
+
+#Bar/Бар
+bar
+{ 
+    output HDMI-A-2
+    position top
+    height 45
+    font pango:DejaVu Sans Mono Bold 17
+    tray_output primary
+    colors
+    {
+        statusline #689d6a
+        background #282828
+        inactive_workspace #282828 #282828 #689d6a
+        active_workspace #282828 #282828 #689d6a
+        urgent_workspace #282828 #282828 #cc241d
+        focused_workspace #282828 #282828 #d79921
+    }
+    status_command while ~/.config/sway/bar.sh; do sleep 0.5; done
+}
+bar
+{ 
+    output DP-1
+    position top
+    height 45
+    font pango:DejaVu Sans Mono Bold 17
+    tray_output primary
+    colors
+    {
+        statusline #689d6a
+        background #282828
+        inactive_workspace #282828 #282828 #689d6a
+        active_workspace #282828 #282828 #689d6a
+        urgent_workspace #282828 #282828 #cc241d
+        focused_workspace #282828 #282828 #d79921
+    }
+    status_command while ~/.config/sway/bar.sh --mini; do sleep 0.5; done
+}
+exec swaync
+
+include /etc/sway/config.d/*
